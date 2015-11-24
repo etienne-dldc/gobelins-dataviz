@@ -9,7 +9,7 @@
 
 <template>
   <div class="container">
-    <h2 class="red">{{msg}}</h2>
+    <h2 class="red">Test {{msg}}</h2>
   </div>
 </template>
 
@@ -17,7 +17,7 @@
 export default {
   data () {
     return {
-      msg: 'Hello from Component A!'
+      msg: 'Yo from Component A!'
     }
   }
 }

@@ -5,6 +5,7 @@ var gutil = require("gulp-util");
 var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("../../webpack.config.js");
+var reload = require('browser-sync').reload;
 
 gulp.task("webpack:build", function(callback) {
 	// modify some webpack config options
@@ -46,6 +47,8 @@ gulp.task("webpack:build-dev", function(callback) {
 		gutil.log("[webpack:build-dev]", stats.toString({
 			colors: true
 		}));
+		console.log(reload);
+		reload();
 		callback();
 	});
 });

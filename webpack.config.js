@@ -4,6 +4,8 @@ var webpack = require('webpack');
 var path = require("path");
 
 var webpackConfig = {
+  debug: true,
+  devtool: 'eval',
   entry: './src/main.js',
   output: {
     path: path.join(__dirname, "dist"),
@@ -31,31 +33,5 @@ var webpackConfig = {
   },
   plugins: []
 }
-
-/**
- * PROD
- */
-// if (process.env.NODE_ENV === 'production') {
-//   module.exports.plugins = [
-//     new webpack.DefinePlugin({
-//       'process.env': {
-//         NODE_ENV: '"production"'
-//       }
-//     }),
-//     new webpack.optimize.UglifyJsPlugin({
-//       compress: {
-//         warnings: false
-//       }
-//     }),
-//     new webpack.optimize.OccurenceOrderPlugin()
-//   ]
-// } else
-/**
- * DEV
- */
-// {
-//   module.exports.devtool = '#source-map'
-//   module.exports.plugins = [];
-// }
 
 module.exports = webpackConfig

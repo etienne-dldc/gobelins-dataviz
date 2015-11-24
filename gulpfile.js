@@ -1,31 +1,26 @@
 'use strict';
 
 var gulp = require('gulp');
-var concat = require('gulp-concat');
-var sourcemaps = require('gulp-sourcemaps');
-var gutil = require("gulp-util");
 var webpack = require("webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
 var stream = require('webpack-stream');
+var wiredep = require('wiredep').stream;
 
-var path = {
-  HTML: 'src/index.html',
-  ALL: ['src/**/*'],
-  MINIFIED_OUT: 'build.min.js',
-  DEST_SRC: 'dist/src',
-  DEST_BUILD: 'dist/build',
-  DEST: 'dist'
-};
+// Get Config
+var config = require('./config.js');
+
+// Load plugins
+var $ = require('gulp-load-plugins')();
+
 
 gulp.task('webpack', [], function() {
-  return gulp.src(path.ALL) // gulp looks for all source files under specified path
-  .pipe(sourcemaps.init()) // creates a source map which would be very helpful for debugging by maintaining the actual source code structure
-  .pipe(stream(webpackConfig)) // blend in the webpack config into the source files
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest(path.DEST_BUILD));
+  return gulp.src(config.allIn)
+  .pipe($.sourcemaps.init())
+  .pipe(stream(webpackConfig))
+  .pipe($.sourcemaps.write())
+  .pipe(gulp.dest(config.out));
 });
-
 
 gulp.task("webpack-dev-server", function(callback) {
   // modify some webpack config options
@@ -35,19 +30,40 @@ gulp.task("webpack-dev-server", function(callback) {
 
   // Start a webpack-dev-server
   new WebpackDevServer(webpack(myConfig), {
-    publicPath: "/" + myConfig.output.publicPath,
+    //publicPath: "/",
+    contentBase: config.out,
     stats: {
       colors: true
     }
   }).listen(8080, "localhost", function(err) {
-    if (err) throw new gutil.PluginError("webpack-dev-server", err);
-    gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+    if (err) throw new $.util.PluginError("webpack-dev-server", err);
+    $.util.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
   });
+});
+
+gulp.task('clean', function () {
+  return gulp.src(config.allOut, { read: false }).pipe($.clean());
+});
+
+gulp.task('html', function () {
+  return gulp.src(config.index)
+    .pipe($.useref())
+    .pipe(gulp.dest(config.out));
+});
+
+
+gulp.task('assets', function () {
+  return gulp.src(config.assets)
+    .pipe(gulp.dest(config.out));
 });
 
 
 gulp.task('watch', function() {
-  gulp.watch(path.ALL, ['webpack']);
+  gulp.watch(config.all, ['build']);
 });
 
-gulp.task('default', ['webpack-dev-server', 'watch']);
+gulp.task('build', ['html', 'assets', 'webpack']);
+
+gulp.task('default', ['clean'], function () {
+  gulp.start(['webpack-dev-server', 'watch', 'build']);
+});

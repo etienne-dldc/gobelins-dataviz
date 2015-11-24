@@ -1,14 +1,19 @@
 {
   "name": "gob-dataviz",
   "version": "1.0.0",
-  "description": "Example using Webpack with vue-loader",
+  "description": "Gobelins DataViz",
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot --quiet",
     "build": "export NODE_ENV=production && webpack --progress --hide-modules"
   },
   "dependencies": {
-    "vue": "^1.0.0"
+    "dat-gui": "^0.5.0",
+    "gsap": "^1.18.0",
+    "raf": "^3.1.0",
+    "three": "^0.73.0",
+    "vue": "^1.0.0",
+    "vue-router": "^0.7.7"
   },
   "devDependencies": {
     "babel-core": "^6.1.2",
@@ -22,14 +27,18 @@
     "css-loader": "^0.21.0",
     "file-loader": "^0.8.4",
     "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^1.1.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1",
+    "gulp-useref": "^3.0.3",
     "gulp-util": "^3.0.7",
     "gulp-webpack": "^1.5.0",
     "jade": "^1.11.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.5",
+    "script-loader": "^0.6.1",
     "style-loader": "^0.13.0",
     "stylus-loader": "^1.4.0",
     "template-html-loader": "0.0.3",
@@ -38,8 +47,9 @@
     "vue-loader": "^7.0.0",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.0",
-    "webpack-stream": "^2.1.1"
+    "webpack-stream": "^2.1.1",
+    "wiredep": "^2.2.2"
   },
-  "author": "Evan You",
+  "author": "Etienne Dldc & Hugo Maury",
   "license": "MIT"
 }

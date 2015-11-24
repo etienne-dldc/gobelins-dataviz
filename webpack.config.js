@@ -3,20 +3,26 @@
 var webpack = require('webpack');
 var path = require("path");
 
+var config = require('./config');
+
 var webpackConfig = {
   debug: true,
   devtool: 'eval',
-  entry: './src/main.js',
+  entry: config.entryPoint,
   output: {
-    path: path.join(__dirname, "dist"),
-    publicPath: 'dist/',
-    filename: 'build.js'
+    path: path.join(__dirname, config.out),
+    publicPath: config.out,
+    filename: config.outFile
   },
   module: {
     loaders: [
       {
         test: /\.vue$/,
         loader: 'vue'
+      },
+      {
+        test: /classes\/.*(\.js)$/,
+        loader: 'babel'
       },
       {
         // edit this for additional asset file types
@@ -30,8 +36,7 @@ var webpackConfig = {
   babel: {
     presets: ['es2015', 'stage-0'],
     plugins: ['transform-runtime']
-  },
-  plugins: []
+  }
 }
 
 module.exports = webpackConfig

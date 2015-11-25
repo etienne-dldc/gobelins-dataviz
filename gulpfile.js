@@ -62,7 +62,9 @@ gulp.task('watch', function() {
   gulp.watch(config.all, ['build']);
 });
 
-gulp.task('build', ['html', 'assets', 'webpack']);
+gulp.task('build', function () {
+  gulp.start(['html', 'assets', 'webpack']);
+});
 
 gulp.task('default', ['clean'], function () {
   gulp.start(['webpack-dev-server', 'watch', 'build']);

@@ -21,7 +21,7 @@ var webpackConfig = {
         loader: 'vue'
       },
       {
-        test: /classes\/.*(\.js)$/,
+        test: /src\/three\/.*(\.js)$/,
         loader: 'babel'
       },
       {

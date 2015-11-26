@@ -22,7 +22,7 @@ export function loadAllTextures(callback) {
 				textureElem.url,
 				// On loaded
 				( texture ) => {
-					console.log( 'Texture loaded : ' + textureElem.name );
+					console.info( 'Texture loaded : ' + textureElem.name );
 					textures[textureElem.name] = texture;
 					nbrOfTexture--;
 					if (nbrOfTexture == 0) {

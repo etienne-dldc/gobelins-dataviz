@@ -6,20 +6,19 @@ export default class Forest extends THREE.Object3D {
   constructor() {
     super();
 
+		this.dataParams = {
+			hauteur: { multiplier: 0.001, color: 0xFFFFFF, user_multiplier: 1 },
+			arbres_align_dist: { multiplier: 1, color: 0xFF0000, user_multiplier: 1, max: 104025 },
+			bancs_dist: { multiplier: 1, color: 0x00FF00, user_multiplier: 1, max: 11581 },
+			poteaux_bois_dist: { multiplier: 0.5, color: 0x0000FF, user_multiplier: 1, max: 137 }
+		};
+
     this.allData = [];
 
 		/**
 		 * GRID
 		 */
 		var groundGeo = new THREE.Geometry();
-    // var size = 300, step = 50;
-		// for ( var i = - size; i <= size; i += step ) {
-		// 	groundGeo.vertices.push( new THREE.Vector3( - size, 0, i ) );
-		// 	groundGeo.vertices.push( new THREE.Vector3(   size, 0, i ) );
-		//
-		// 	groundGeo.vertices.push( new THREE.Vector3( i, 0, - size ) );
-		// 	groundGeo.vertices.push( new THREE.Vector3( i, 0,   size ) );
-		// }
 		var length = 15, step = 50, cutAngleRatio = 0.7;
 		var size = length * step * 0.5, cutAngle = Math.floor(length * cutAngleRatio * 0.5);
 		this.gridSize = size;
@@ -55,20 +54,22 @@ export default class Forest extends THREE.Object3D {
   }
 
 	addTree(treeData) {
-		// var maxLoop = 50;
-		// var x, z;
-		// do {
-		// 	let posAngle = Math.random() * Math.PI * 2;
-		// 	let posDist = Math.random() * (this.gridSize * 0.9 );
-		// 	x =  Math.cos(posAngle) * posDist;
-		// 	z = Math.sin(posAngle) * posDist;
-		// 	maxLoop--;
-		// 	if (maxLoop == 0) { console.log('max'); }
-		// } while (maxLoop > 0 && this.closestTree(x, z) < 30);
 
-		var pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
+		var maxLoop = 50;
+		var x, z;
+		do {
+			let posAngle = Math.random() * Math.PI * 2;
+			let posDist = Math.random() * (this.gridSize * 0.9 );
+			x =  Math.cos(posAngle) * posDist;
+			z = Math.sin(posAngle) * posDist;
+			maxLoop--;
+			if (maxLoop == 0) { console.log('max'); }
+		} while (maxLoop > 0 && this.closestTree(x, z) < 30);
 
-		var newTree = new Tree(treeData);
+		var pos = [x, z];
+		//var pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
+
+		var newTree = new Tree(treeData, this.dataParams);
 		newTree.position.set(pos[0], 0, pos[1] );
 		this.add(newTree);
 		this.trees.push(newTree);
@@ -77,7 +78,7 @@ export default class Forest extends THREE.Object3D {
 	generateTrees() {
 		if (this.allData.length == 0) { console.log('No data :/'); return false; }
 		for (var i = 0; i < this.allData.length; i++) {
-			this.addTree(this.allData[i]);
+			this.addTree(this.allData[i], this.dataParams);
 		}
 	}
 

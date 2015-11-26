@@ -23,6 +23,12 @@ var Tools = {
   },
   geoDistToCanvas(dist) {
     return Tools.map(dist, 0, 0.1, 0, size);
+  },
+  sphereRayonFromVolume(volume) {
+    return Math.pow( (3*volume) / (4 * Math.PI), 1/3);
+  },
+  sphereVolumeFromRayon(rayon) {
+    return (4 * Math.PI * Math.pow(rayon, 3) ) / 3;
   }
 }
 

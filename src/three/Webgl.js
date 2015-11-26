@@ -41,22 +41,22 @@ export default class Webgl {
     this.camera.lookAt(new THREE.Vector3())
 
     /**
+     * RENDERER
+     */
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setSize(width, height);
+    this.renderer.setClearColor(0x121111);
+
+    /**
      * CONTROL
      */
-    this.controls = new OrbitControls(this.camera);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     //this.controls.minDistance = 100;
     this.controls.maxDistance = 700;
     this.controls.minAzimuthAngle = -Math.PI/2;
     this.controls.maxAzimuthAngle = Math.PI/2;
     this.controls.minPolarAngle = 0; // radians
     this.controls.maxPolarAngle = Math.PI * 0.4; // radians
-
-    /**
-     * RENDERER
-     */
-    this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize(width, height);
-    this.renderer.setClearColor(0x000000);
 
     this.composer = null;
     this.initPostprocessing();

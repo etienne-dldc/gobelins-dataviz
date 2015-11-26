@@ -6,7 +6,7 @@ var config = {
   index: 'src/index.html',
   outFileMin: 'build.min.js',
   outFile: 'build.js',
-  out: 'dist/',
+  out: '',
   in: 'src/',
   entryPoint: './src/main.js',
   allIn: ['src/**/*'],

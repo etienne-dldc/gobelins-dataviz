@@ -1,6 +1,5 @@
 import THREE from 'three';
 
-import Leaf from './Leaf';
 import textures from '../textures';
 import _ from 'lodash';
 import Tools from '../../modules/tools';
@@ -130,12 +129,12 @@ export default class Tree extends THREE.Object3D {
     geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
     geometry.computeBoundingSphere();
     var material = new THREE.PointsMaterial({
-      size: 2,
+      size: 1.7,
       vertexColors: THREE.VertexColors,
-      map: textures.particle2,
+      map: textures.particle3,
       transparent : true,
       //blending: THREE.AdditiveBlending,
-      opacity: 0.4,
+      opacity: 0.9,
       depthTest: false,
     });
     var particleSystem = new THREE.Points( geometry, material );

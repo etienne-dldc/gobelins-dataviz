@@ -1,5 +1,5 @@
 var Vue = require('vue')
-var App = require('./app.vue')
+var App = require('./App.vue')
 var VueRouter = require('vue-router')
 
 Vue.use(VueRouter)

@@ -22,7 +22,7 @@ canvas {
 
 <script>
 import raf from 'raf';
-import dat from 'dat-gui';
+//import dat from 'dat-gui';
 import $ from 'jquery';
 import 'gsap';
 import Webgl from '../three/Webgl';
@@ -36,8 +36,8 @@ export default {
     $(this.$el).height(winHeight);
     this.webgl = new Webgl(this.$el.clientWidth, this.$el.clientHeight);
     // GUI settings
-    this.gui = new dat.GUI();
-    this.gui.add(this.webgl.params, 'usePostprocessing');
+    // this.gui = new dat.GUI();
+    // this.gui.add(this.webgl.params, 'usePostprocessing');
     // handle resize
     window.addEventListener('resize', this.resizeHandler);
     this.$el.appendChild(this.webgl.renderer.domElement);

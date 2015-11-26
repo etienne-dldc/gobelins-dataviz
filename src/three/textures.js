@@ -8,7 +8,8 @@ const textures = {};
 
 const texturesUrl = [
 	{ name: 'particle1', url: 'textures/particle1.png' },
-	{ name: 'particle2', url: 'textures/particle2.png' }
+	{ name: 'particle2', url: 'textures/particle2.png' },
+	{ name: 'particle3', url: 'textures/particle3.png' }
 ];
 
 let nbrOfTexture = texturesUrl.length;

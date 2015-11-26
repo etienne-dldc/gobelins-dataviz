@@ -7,10 +7,10 @@ export default class Forest extends THREE.Object3D {
     super();
 
 		this.dataParams = {
-			hauteur: { multiplier: 0.001, color: 0xFFFFFF, user_multiplier: 1 },
-			arbres_align_dist: { multiplier: 1, color: 0xFF0000, user_multiplier: 1, max: 104025 },
-			bancs_dist: { multiplier: 1, color: 0x00FF00, user_multiplier: 1, max: 11581 },
-			poteaux_bois_dist: { multiplier: 0.5, color: 0x0000FF, user_multiplier: 1, max: 137 }
+			hauteur: { multiplier: 0.001, color: 0xffffff, user_multiplier: 1 },
+			arbres_align_dist: { multiplier: 1, color: 0x16f1d4, user_multiplier: 1, max: 104025 },
+			bancs_dist: { multiplier: 1, color: 0x18f277, user_multiplier: 1, max: 11581 },
+			poteaux_bois_dist: { multiplier: 0.5, color: 0x1dacdd, user_multiplier: 1, max: 137 }
 		};
 
     this.allData = [];

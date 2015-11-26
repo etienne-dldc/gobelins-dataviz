@@ -2,6 +2,7 @@
   <div class="app-container">
     <loader v-if="displayLoader" transition="fade"></loader>
     <graph></graph>
+    <sidebar></sidebar>
   </div>
 </template>
 
@@ -12,6 +13,7 @@
   }
 
   @import "./styles/transitions.scss";
+  @import "./styles/fonts.scss";
 
   .app-container{
     position: fixed;
@@ -23,8 +25,9 @@
 </style>
 
 <script>
-import Graph from './components/graph.vue'
-import Loader from './components/loader.vue'
+import Graph from './components/Graph.vue'
+import Loader from './components/Loader.vue'
+import Sidebar from './components/Sidebar.vue'
 
 export default {
   data () {
@@ -34,7 +37,8 @@ export default {
   },
   components: {
     Graph,
-    Loader
+    Loader,
+    Sidebar
   },
   events: {
     "loader-off": function () {

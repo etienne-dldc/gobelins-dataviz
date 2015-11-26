@@ -25,8 +25,16 @@ var webpackConfig = {
         loader: 'babel'
       },
       {
+        test: /src\/styles\/.*(\.scss)$/,
+        loader: 'sass'
+      },
+      {
         // edit this for additional asset file types
         test: /\.(png|jpg|gif)$/,
+        loader: 'file?name=[name].[ext]?[hash]'
+      },
+      {
+        test: /\.(svg|eot|woff2|woff|ttf)$/,
         loader: 'file?name=[name].[ext]?[hash]'
       }
     ]

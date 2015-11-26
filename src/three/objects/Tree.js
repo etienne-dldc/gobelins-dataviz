@@ -4,25 +4,41 @@ import Leaf from './Leaf';
 import textures from '../textures';
 
 export default class Tree extends THREE.Object3D {
-  constructor() {
+  constructor(treeData) {
     super();
 
-    this.trunkHeight = 20 + Math.random() * 15;
+    this.data = treeData;
+
+    this.trunkHeight = treeData.hauteur;
     this.trunkWidth = 0.5;
     this.leafsSphereSize = 13;
 
     // Trunk
-    var geom = new THREE.BoxGeometry(this.trunkWidth, this.trunkHeight, this.trunkWidth);
-    var mat = new THREE.MeshPhongMaterial({
+    var trunkGeom = new THREE.BoxGeometry(this.trunkWidth, this.trunkHeight, this.trunkWidth);
+    var trunkMat = new THREE.MeshPhongMaterial({
       color: 0xFFFFFF,
       specular: 0xffffff,
       shininess: 1,
       transparent: true,
       opacity: 1
     });
-    this.trunk = new THREE.Mesh( geom, mat);
+    this.trunk = new THREE.Mesh( trunkGeom, trunkMat);
     this.trunk.position.y = this.trunkHeight/2;
     this.add(this.trunk);
+
+    // Hit Box
+    var hitboxHeight = this.leafsSphereSize + this.trunkHeight;
+    var hitboxWidth = this.leafsSphereSize*2;
+    var hitboxGeom = new THREE.BoxGeometry(hitboxWidth, hitboxHeight, hitboxWidth);
+    var hitboxMat = new THREE.MeshBasicMaterial({
+      transparent: true,
+      opacity: 0,
+      depthWrite: false
+    });
+    this.hitbox = new THREE.Mesh( hitboxGeom, hitboxMat );
+    this.hitbox.position.y = hitboxHeight/2;
+    this.hitbox.treeObject = this;
+    this.add(this.hitbox);
 
     this.leafs = [];
 
@@ -41,7 +57,7 @@ export default class Tree extends THREE.Object3D {
   			var z = Math.random() - 0.5;
         var pos = new THREE.Vector3(x, y, z);
         pos.normalize();
-        pos.multiplyScalar( 1 + Math.random() * this.leafsSphereSize );
+        pos.multiplyScalar( Math.random() * this.leafsSphereSize );
 
   			positions[ i ]     = pos.x;
   			positions[ i + 1 ] = pos.y;
@@ -67,6 +83,18 @@ export default class Tree extends THREE.Object3D {
       particleSystem.position.y = this.trunkHeight;
       this.leafs.push(particleSystem);
       this.add( particleSystem );
+    }
+  }
+
+  hoverOn() {
+    for (var i = 0; i < this.leafs.length; i++) {
+      this.leafs[i].position.y = this.trunkHeight + (i*this.leafsSphereSize);
+    }
+  }
+
+  hoverOff() {
+    for (var i = 0; i < this.leafs.length; i++) {
+      this.leafs[i].position.y = this.trunkHeight;
     }
   }
 

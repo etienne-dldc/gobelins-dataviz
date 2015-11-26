@@ -5,7 +5,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 1);
     color: white;
     font-size: 20px;
     z-index: 1000;

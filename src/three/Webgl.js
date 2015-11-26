@@ -18,6 +18,8 @@ export default class Webgl {
     this.treesHitbox = [];
     this.hoverTree = null;
 
+    window.myWebgl = this;
+
     /**
      * SCENE
      */
@@ -35,9 +37,7 @@ export default class Webgl {
      * CAMERA
      */
     this.camera = new THREE.PerspectiveCamera(50, width / height, 1, 1000);
-    this.camera.position.z = 600;
-    this.camera.position.y = 30;
-    this.camera.rotation.x = -0.3;
+    this.camera.position.set(280, 330, 410);
     this.camera.lookAt(new THREE.Vector3())
 
     /**

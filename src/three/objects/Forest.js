@@ -69,8 +69,10 @@ export default class Forest extends THREE.Object3D {
 		var pos = [x, z];
 		//var pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
 
+
 		var newTree = new Tree(treeData, this.dataParams);
-		newTree.position.set(pos[0], 0, pos[1] );
+		newTree.position.setX(pos[0]);
+		newTree.position.setZ(pos[1]);
 		this.add(newTree);
 		this.trees.push(newTree);
 	}
@@ -85,7 +87,8 @@ export default class Forest extends THREE.Object3D {
 	getHitboxList(){
 		var result = [];
 		for (var i = 0; i < this.trees.length; i++) {
-			result.push(this.trees[i].hitbox);
+			result.push(this.trees[i].hitboxtrunk);
+			result.push(this.trees[i].hitboxleafs);
 		}
 		return result;
 	}

@@ -20,7 +20,8 @@ export default class Tree extends THREE.Object3D {
     this.rayonBase = 0.01;
 
     this.tweens = {
-      hover : null
+      hover : null,
+      in: null
     };
 
     // param_name : { multiplier: 0.01, user_multiplier: 0.5, color: 0xFFFFFF }
@@ -29,26 +30,33 @@ export default class Tree extends THREE.Object3D {
 
     this.setParams(dataParams);
 
-    this.createLeafs(['arbres_align_dist', 'bancs_dist', 'poteaux_bois_dist']);
-    this.createTrunk();
     this.createHitbox();
+    this.createTrunk();
     this.createRayon();
+    this.createLeafs(['arbres_align_dist', 'bancs_dist', 'poteaux_bois_dist']);
+
+    this.animIn();
   }
 
   createHitbox() {
-    // Hit Box
-    let hitboxHeight = this.leafsSphereSize + this.trunkHeight;
-    let hitboxWidth = this.leafsSphereSize*2;
-    let hitboxGeom = new THREE.BoxGeometry(hitboxWidth, hitboxHeight, hitboxWidth);
     let hitboxMat = new THREE.MeshBasicMaterial({
       transparent: true,
       opacity: 0,
       depthWrite: false
     });
-    this.hitbox = new THREE.Mesh( hitboxGeom, hitboxMat );
-    this.hitbox.position.y = hitboxHeight/2;
-    this.hitbox.treeObject = this;
-    this.add(this.hitbox);
+
+    // Hit Box Trunk
+    let hitboxtrunkGeom = new THREE.BoxGeometry(this.trunkWidth + 1, this.trunkHeight, this.trunkWidth + 1);
+    this.hitboxtrunk = new THREE.Mesh( hitboxtrunkGeom, hitboxMat );
+    this.hitboxtrunk.position.y = this.trunkHeight/2;
+    this.hitboxtrunk.treeObject = this;
+    this.add(this.hitboxtrunk);
+    // Hit Box Leafs
+    let hitboxleafsGeom = new THREE.SphereGeometry(this.leafsSphereSize, 12, 12);
+    this.hitboxleafs = new THREE.Mesh( hitboxleafsGeom, hitboxMat );
+    this.hitboxleafs.position.y = this.trunkHeight;
+    this.hitboxleafs.treeObject = this;
+    this.add(this.hitboxleafs);
   }
 
   createTrunk() {
@@ -87,6 +95,7 @@ export default class Tree extends THREE.Object3D {
       let elemName = list[i]
       this.createLeaf(elemName);
     }
+    this.resizeHitbox();
   }
 
   createLeaf(name) {
@@ -131,8 +140,20 @@ export default class Tree extends THREE.Object3D {
     });
     var particleSystem = new THREE.Points( geometry, material );
     particleSystem.position.y = this.trunkHeight;
+    particleSystem.rayon = rayon;
     this.leafs[name] = particleSystem;
     this.add( particleSystem );
+  }
+
+  resizeHitbox() {
+    let maxRayon = 0;
+    _.each(this.leafs, (elem, index) => {
+      if (elem.rayon > maxRayon) {
+        maxRayon = elem.rayon;
+      }
+    });
+    var scaleValue = maxRayon / this.leafsSphereSize;
+    this.hitboxleafs.scale.set(scaleValue, scaleValue, scaleValue);
   }
 
   setParams(params) {
@@ -186,12 +207,25 @@ export default class Tree extends THREE.Object3D {
     this.tweens.hover = TweenMax.to(this.rayonMat, 0.3, {
       opacity: 0.08
     });
+    TweenMax.from(this.rayon.scale, 0.2, {
+      z: 0,
+      y: 0,
+      x: 0
+    });
   }
 
   hoverOff() {
-    if (this.tweens.hover !== null) { this.tweens.hover.kill(null, this.rayonMat); }
+    if (this.tweens.hover) { this.tweens.hover.kill(null, this.rayonMat); }
     this.tweens.hover = TweenMax.to(this.rayonMat, 0.3, {
       opacity: 0.01
+    });
+  }
+
+  animIn() {
+    this.position.y = 1000;
+    this.tweens.in = TweenMax.to(this.position, 0.5, {
+      y: 0,
+      delay: Math.random() * 1
     });
   }
 

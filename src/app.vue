@@ -1,7 +1,26 @@
 <template lang="html">
-  <loader v-if="displayLoader"></loader>
-  <graph></graph>
+  <div class="app-container">
+    <loader v-if="displayLoader" transition="fade"></loader>
+    <graph></graph>
+  </div>
 </template>
+
+<style lang="sass">
+  html, body{
+    height: 100%;
+    background: black;
+  }
+
+  @import "./styles/transitions.scss";
+
+  .app-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+</style>
 
 <script>
 import Graph from './components/graph.vue'
@@ -24,7 +43,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css">
-
-</style>

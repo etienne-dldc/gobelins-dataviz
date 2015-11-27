@@ -1,20 +1,29 @@
 import THREE from 'three';
 import Tools from '../../modules/tools';
 import Tree from './Tree';
+import _ from 'lodash';
 
 export default class Forest extends THREE.Object3D {
   constructor() {
     super();
 
-		this.dataParams = {
-			hauteur: { multiplier: 0.001, color: 0xffffff, user_multiplier: 1 },
-			arbres_align_dist: { multiplier: 1, color: 0x16f1d4, user_multiplier: 1, max: 104025 },
-			bancs_dist: { multiplier: 1, color: 0x18f277, user_multiplier: 1, max: 11581 },
-			poteaux_bois_dist: { multiplier: 0.5, color: 0x1dacdd, user_multiplier: 1, max: 137 }
-		};
-
     this.allData = [];
+		this.paramsData = [];
+    this.trees = [];
 
+		this.createGrid();
+
+  }
+
+  setData(data) {
+    this.allData = data;
+  }
+
+	setParams(params) {
+		this.paramsData = params;
+	}
+
+	createGrid() {
 		/**
 		 * GRID
 		 */
@@ -41,47 +50,50 @@ export default class Forest extends THREE.Object3D {
 			groundGeo.vertices.push( new THREE.Vector3( z, 0,   size - xSub ) );
 		}
 		var groundMat = new THREE.LineBasicMaterial( { color: 0xFFFFFF, linewidth: 0.1, opacity: 0.4 } );
-    groundMat.transparent = true;
+		groundMat.transparent = true;
 		this.groundLines = new THREE.LineSegments( groundGeo, groundMat );
 		this.add( this.groundLines );
-
-    this.trees = [];
-
-  }
-
-  setData(data) {
-    this.allData = data;
-  }
-
-	addTree(treeData) {
-
-		var maxLoop = 50;
-		var x, z;
-		do {
-			let posAngle = Math.random() * Math.PI * 2;
-			let posDist = Math.random() * (this.gridSize * 0.9 );
-			x =  Math.cos(posAngle) * posDist;
-			z = Math.sin(posAngle) * posDist;
-			maxLoop--;
-			if (maxLoop == 0) { console.log('max'); }
-		} while (maxLoop > 0 && this.closestTree(x, z) < 30);
-
-		var pos = [x, z];
-		//var pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
-
-
-		var newTree = new Tree(treeData, this.dataParams);
-		newTree.position.setX(pos[0]);
-		newTree.position.setZ(pos[1]);
-		this.add(newTree);
-		this.trees.push(newTree);
 	}
 
 	generateTrees() {
 		if (this.allData.length == 0) { console.log('No data :/'); return false; }
 		for (var i = 0; i < this.allData.length; i++) {
-			this.addTree(this.allData[i], this.dataParams);
+			this.addTree(this.allData[i], this.paramsData);
 		}
+	}
+
+	updateTreesParams() {
+		for (var i = 0; i < this.trees.length; i++) {
+			this.trees[i].updateParams();
+			this.trees[i].updateLeafs();
+			this.trees[i].updateRayonGeom();
+		}
+	}
+
+	addTree(treeData, params) {
+		// Position
+		var pos = [0, 0];
+		if (params.realGeoloc) {
+			pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
+		} else {
+			var maxLoop = 50;
+			var x, z;
+			do {
+				let posAngle = Math.random() * Math.PI * 2;
+				let posDist = Math.random() * (this.gridSize * 0.9 );
+				x =  Math.cos(posAngle) * posDist;
+				z = Math.sin(posAngle) * posDist;
+				maxLoop--;
+				if (maxLoop == 0) { console.log('max'); }
+			} while (maxLoop > 0 && this.closestTree(x, z) < 30);
+			pos = [x, z];
+		}
+
+		var newTree = new Tree(treeData, params);
+		newTree.position.setX(pos[0]);
+		newTree.position.setZ(pos[1]);
+		this.add(newTree);
+		this.trees.push(newTree);
 	}
 
 	getHitboxList(){

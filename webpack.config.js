@@ -11,7 +11,7 @@ var webpackConfig = {
   entry: config.entryPoint,
   output: {
     path: path.join(__dirname, config.out),
-    publicPath: config.out,
+    publicPath: config.publicPath,
     filename: config.outFile
   },
   module: {

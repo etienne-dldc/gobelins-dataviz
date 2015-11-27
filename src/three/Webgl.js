@@ -13,6 +13,7 @@ export default class Webgl {
       usePostprocessing: false,
     };
     this.allData = [];
+    this.paramsData = null;
     this.mouse = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
     this.treesHitbox = [];
@@ -24,7 +25,7 @@ export default class Webgl {
      * SCENE
      */
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0x000000, 300, 1000 );
+    this.scene.fog = new THREE.Fog( 0x000000, 300, 1500 );
 		this.scene.fog.color.setHSL( 0, 0, 0 );
 
     /**
@@ -66,6 +67,10 @@ export default class Webgl {
     this.allData = data;
   }
 
+  setParams(params) {
+    this.paramsData = params;
+  }
+
   initPostprocessing() {
     if (!this.params.usePostprocessing) { return; }
 
@@ -76,6 +81,7 @@ export default class Webgl {
     this.forest = new Forest();
     this.forest.position.set(0, 0, 0);
     this.forest.setData(this.allData);
+    this.forest.setParams(this.paramsData);
     this.forest.generateTrees();
     this.treesHitbox = this.forest.getHitboxList();
     this.scene.add(this.forest);

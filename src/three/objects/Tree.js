@@ -6,11 +6,16 @@ import Tools from '../../modules/tools';
 import 'gsap';
 
 export default class Tree extends THREE.Object3D {
-  constructor(treeData, dataParams) {
+  constructor(treeData, paramsData) {
     super();
 
     this.data = treeData;
-
+    this.params = {
+      rayon: null,
+      leafs: {}
+    };
+    this.paramsData = paramsData;
+    this.leafsToUpdate = [];
     this.leafsSphereSize = 13;
     this.trunkHeight = this.leafsSphereSize/2 + this.data.hauteur;
     this.trunkWidth = 0.5;
@@ -23,16 +28,13 @@ export default class Tree extends THREE.Object3D {
       in: null
     };
 
-    // param_name : { multiplier: 0.01, user_multiplier: 0.5, color: 0xFFFFFF }
-    this.params = {};
-    this.computedData = {};
-
-    this.setParams(dataParams);
+    this.updateParams();
 
     this.createHitbox();
     this.createTrunk();
     this.createRayon();
-    this.createLeafs(['arbres_align_dist', 'bancs_dist', 'poteaux_bois_dist']);
+    this.createLeafs();
+    this.updateLeafs();
 
     this.animIn();
   }
@@ -73,8 +75,8 @@ export default class Tree extends THREE.Object3D {
   }
 
   createRayon() {
-    let rayonWidth = Tools.geoDistToCanvas(this.computedData.rayon);
-    let rayonGeom = new THREE.CylinderGeometry(rayonWidth, rayonWidth, this.rayonHeight, 32);
+    let rayonWidth = Tools.geoDistToCanvas(this.params.rayon);
+    this.rayonGeom = new THREE.CylinderGeometry(rayonWidth, rayonWidth, this.rayonHeight, 32);
     this.rayonMat = new THREE.MeshPhongMaterial({
       color: 0xFFFFFF,
       specular: 0xffffff,
@@ -83,31 +85,93 @@ export default class Tree extends THREE.Object3D {
       opacity: 0.01,
       depthTest: false
     });
-    this.rayon = new THREE.Mesh( rayonGeom, this.rayonMat);
+    this.rayon = new THREE.Mesh( this.rayonGeom, this.rayonMat);
     this.rayon.position.y = this.rayonHeight/2;
     this.add(this.rayon);
   }
 
-  createLeafs(list) {
+  updateRayonGeom() {
+    let rayonWidth = Tools.geoDistToCanvas(this.params.rayon);
+    this.rayonGeom = new THREE.CylinderGeometry(rayonWidth, rayonWidth, this.rayonHeight, 32);
+    this.rayon.geometry = this.rayonGeom;
+  }
+
+  createLeafs() {
     this.leafs = {};
-    for (var i = 0; i < list.length; i++) {
-      let elemName = list[i]
-      this.createLeaf(elemName);
-    }
-    this.resizeHitbox();
+    _.each(this.params.leafs, (elem, key) => {
+      this.createLeaf(key);
+    })
   }
 
   createLeaf(name) {
-    //console.log(this.computedData, name);
-    var nbrOfParticle = this.computedData[name];
+    //console.log(this.params, name);
+    var nbrOfParticle = this.params.leafs[name];
     var volumeMax = Tools.sphereVolumeFromRayon(this.leafsSphereSize);
     var volume = Tools.map(nbrOfParticle, 0, this.maxParticles, 0, volumeMax);
     var rayon = Tools.sphereRayonFromVolume(volume);
 
     var geometry = new THREE.BufferGeometry();
+    geometry.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array(), 3 ) );
+    geometry.addAttribute( 'color', new THREE.BufferAttribute( new Float32Array(), 3 ) );
+    geometry.computeBoundingSphere();
+    var material = new THREE.PointsMaterial({
+      size: 1.7,
+      vertexColors: THREE.VertexColors,
+      map: textures.particle3,
+      transparent : true,
+      //blending: THREE.AdditiveBlending,
+      opacity: 0.9,
+      depthTest: true,
+      alphaTest: 0.2
+    });
+    var particleSystem = new THREE.Points( geometry, material );
+    particleSystem.position.y = this.trunkHeight;
+    particleSystem.sortParticles = true
+    particleSystem.rayon = rayon;
+    this.leafs[name] = particleSystem;
+    this.add( particleSystem );
+  }
+
+  updateLeafs() {
+    for (var i = 0; i < this.leafsToUpdate.length; i++) {
+      var leafName = this.leafsToUpdate[i];
+      if (this.params.leafs[leafName].display == false) {
+        this.hideLeaf(leafName)
+      } else {
+        this.showLeaf(leafName);
+        this.updateLeaf(leafName);
+      }
+    }
+    this.leafsToUpdate = [];
+    this.resizeHitbox();
+  }
+
+  hideLeaf(name) {
+    var leaf = this.leafs[name];
+    leaf.visible = false;
+  }
+
+  showLeaf(name) {
+    var leaf = this.leafs[name];
+    leaf.visible = true;
+  }
+
+  updateLeaf(name) {
+    //console.log('updateLeaf ' + name);
+
+    var leaf = this.leafs[name];
+    var nbrOfParticle = this.params.leafs[name].particles;
+    var volumeMax = Tools.sphereVolumeFromRayon(this.leafsSphereSize);
+    var volume = Tools.map(nbrOfParticle, 0, this.maxParticles, 0, volumeMax);
+    var rayon = Tools.sphereRayonFromVolume(volume);
+
+    leaf.rayon = rayon;
+
     var positions = new Float32Array( nbrOfParticle * 3 );
     var colors = new Float32Array( nbrOfParticle * 3 );
-    var color = new THREE.Color( this.params[name].color );
+
+    var color = new THREE.Color( this.paramsData.leafs[name].color );
+
     for ( let i = 0; i < positions.length; i += 3 ) {
       // positions
       var x = Math.random() - 0.5;
@@ -125,23 +189,12 @@ export default class Tree extends THREE.Object3D {
       colors[ i + 1 ] = color.g;
       colors[ i + 2 ] = color.b;
     }
-    geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-    geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-    geometry.computeBoundingSphere();
-    var material = new THREE.PointsMaterial({
-      size: 1.7,
-      vertexColors: THREE.VertexColors,
-      map: textures.particle3,
-      transparent : true,
-      //blending: THREE.AdditiveBlending,
-      opacity: 0.9,
-      depthTest: false,
-    });
-    var particleSystem = new THREE.Points( geometry, material );
-    particleSystem.position.y = this.trunkHeight;
-    particleSystem.rayon = rayon;
-    this.leafs[name] = particleSystem;
-    this.add( particleSystem );
+
+    leaf.geometry.removeAttribute('position');
+    leaf.geometry.removeAttribute('color');
+    leaf.geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+    leaf.geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
+    leaf.geometry.computeBoundingSphere();
   }
 
   resizeHitbox() {
@@ -152,41 +205,55 @@ export default class Tree extends THREE.Object3D {
       }
     });
     var scaleValue = maxRayon / this.leafsSphereSize;
+    if (scaleValue < 0.1) {
+      scaleValue = 0.1;
+    }
     this.hitboxleafs.scale.set(scaleValue, scaleValue, scaleValue);
   }
 
-  setParams(params) {
-    let updateAll = false;
-    if (params.hauteur !== this.params.hauteur) {
-      this.updateRayon(params);
-      updateAll = true;
-    }
-    _.each(params, (elem, index) => {
-      if (index == 'hauteur') { return; }
-      if (updateAll) {
-        this.computeData(index, params);
-        return;
-      }
-      if (elem !== this.params[index]) {
-        this.computeData(index, params);
+  updateParams() {
+    let params = this.paramsData;
+    let oldParams = _.cloneDeep(this.params);
+    this.caclParams();
+    _.each(params.leafs, (elem, key) => {
+      let leafParams = this.params.leafs[key];
+      if (oldParams.leafs[key] == undefined) { oldParams.leafs[key] = {} }
+      let displayHasChange = oldParams.leafs[key].display !== leafParams.display;
+      let particlesHasChange = oldParams.leafs[key].particles !== leafParams.particles;
+      if (displayHasChange || ( leafParams.display && particlesHasChange ) ) {
+        this.leafsToUpdate.push(key);
       }
     });
-    this.params = params;
   }
 
-  updateRayon(params) {
-    this.computedData.rayon = this.rayonBase + this.data.hauteur * params.hauteur.multiplier * params.hauteur.user_multiplier;
+  updateRayon() {
+    this.params.rayon = this.rayonBase + this.data.hauteur * this.paramsData.hauteur.multiplier * this.paramsData.hauteur.user_multiplier;
   }
 
-  computeData(elemName, params) {
-    let result = this.elemsInRayon(elemName) * params[elemName].multiplier;
-    let maxParticles = this.maxParticles * params[elemName].user_multiplier;
-    result = Tools.map(result, 0, params[elemName].max, 0, maxParticles);
-    this.computedData[elemName] = Math.floor(result);
+  caclParams() {
+    this.updateRayon(this.paramsData.hauteur);
+    _.each(this.paramsData.leafs, (elem, key) => {
+      if (this.params.leafs[key] == undefined) { this.params.leafs[key] = {} }
+      if (elem.display == false) {
+        this.params.leafs[key] = {
+          display: false,
+          particles: null
+        };
+        return;
+      } else {
+        let result = this.elemsInRayon(key) * elem.multiplier;
+        let maxParticles = this.maxParticles * elem.user_multiplier;
+        result = Tools.map(result, 0, elem.max, 1, maxParticles);
+        this.params.leafs[key] = {
+          display: true,
+          particles: Math.floor(result)
+        };
+      }
+    });
   }
 
   elemsInRayon(elemName) {
-    let r = this.computedData.rayon;
+    let r = this.params.rayon;
     let result = 0;
     if (this.data[elemName] == undefined) {
       console.log('Can\'t find ' + elemName);
@@ -207,9 +274,8 @@ export default class Tree extends THREE.Object3D {
       opacity: 0.08
     });
     TweenMax.from(this.rayon.scale, 0.2, {
-      z: 0,
-      y: 0,
-      x: 0
+      z: 0.1,
+      x: 0.1
     });
   }
 

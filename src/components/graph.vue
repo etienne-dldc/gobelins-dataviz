@@ -30,8 +30,10 @@ import { loadAllTextures } from '../three/textures';
 import { loadData } from '../modules/data';
 
 export default {
+  props: ['params-data'],
   ready() {
     this.allData = [];
+
     var winHeight = $(window).height();
     $(this.$el).height(winHeight);
     this.webgl = new Webgl(this.$el.clientWidth, this.$el.clientHeight);
@@ -54,6 +56,10 @@ export default {
       this.loaded();
     })
   },
+  events: {
+    'update-params': 'updateParams',
+    'update-graph': 'updateGraph'
+  },
   methods: {
     resizeHandler() {
       this.webgl.resize(this.$el.clientWidth, this.$el.clientHeight);
@@ -64,11 +70,21 @@ export default {
     },
     loaded() {
       if (this.texturesLoaded && this.dataLoaded) {
-        this.webgl.setData(this.allData);
-        this.webgl.start();
-        this.animate();
-        this.$dispatch('loader-off');
+        this.start();
       }
+    },
+    start() {
+      this.webgl.setData(this.allData);
+      this.webgl.setParams(this.paramsData);
+      this.webgl.start();
+      this.animate();
+      this.$dispatch('loader-off');
+    },
+    updateParams(params) {
+      console.log('update params');
+    },
+    updateGraph() {
+      this.webgl.forest.updateTreesParams();
     }
   }
 }

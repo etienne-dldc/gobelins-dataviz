@@ -9,7 +9,7 @@
     bottom: 0;
 		width : 325px;
     background: $color_main;
-    opacity : 0.98 ;
+    opacity : 0.94;
 		padding-left: 40px;
 		padding-right: 35px;
 
@@ -52,19 +52,38 @@
       <p class="legende-info"><span class="num">2.</span>Jaugez l’importance que vous accordez à  l’impact des
 	 différents facteurs sur la solitude des arbres</p>
       <hr/>
-
+      <legend :params="paramsData.hauteur" @legend-update="onParamsChange"></legend>
+      <hr/>
+      <legend :params="paramsData.leafs.arbres_align_dist" @legend-update="onParamsChange"></legend>
+      <hr/>
+      <legend :params="paramsData.leafs.bancs_dist" @legend-update="onParamsChange";></legend>
+      <hr/>
+      <legend :params="paramsData.leafs.poteaux_bois_dist" @legend-update="onParamsChange";></legend>
   </div>
 </template>
 
 <script>
+import Legend from './Legend.vue'
 import $ from 'jquery';
 
-export default {
-  ready() {
 
+export default {
+  props: ['params-data'],
+  data: () => {
+    return {}
+  },
+  ready() {
+    
+  },
+  components: {
+    Legend
   },
   methods: {
-
+    onParamsChange(params) {
+      // this[params.slug].value = params.value;
+      // this[params.slug].display = params.display;
+      // this.$root.$broadcast('update-params', params);
+    }
   }
 }
 </script>

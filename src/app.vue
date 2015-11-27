@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="app-container">
     <loader v-if="displayLoader" transition="fade"></loader>
-    <graph></graph>
-    <sidebar></sidebar>
+    <graph :params-data="paramsData"></graph>
+    <sidebar :params-data="paramsData"></sidebar>
   </div>
 </template>
 
@@ -32,7 +32,49 @@ import Sidebar from './components/Sidebar.vue'
 export default {
   data () {
     return {
-      displayLoader: true
+      displayLoader: true,
+      paramsData: {
+        realGeoloc: false,
+  			hauteur: {
+          name: 'Rayon d\'action',
+          slug: 'hauteur',
+  				multiplier: 0.001,
+  				color: 0xffffff,
+  				user_multiplier: 1
+  			},
+  			leafs: {
+          arbres_align_dist: {
+            slug: 'arbres_align_dist',
+            name: 'Arbres',
+    				multiplier: 1,
+            color: 0x16f1d4,
+    				colorLegend: '#16f1d4',
+    				user_multiplier: 1,
+    				max: 104025,
+    				display: true
+    			},
+    			bancs_dist: {
+            slug: 'bancs_dist',
+            name: 'Bancs',
+    				color: 0x18f277,
+    				colorLegend: '#18f277',
+    				max: 11581,
+    				multiplier: 1,
+    				user_multiplier: 1,
+    				display: true
+    			},
+    			poteaux_bois_dist: {
+            slug: 'poteaux_bois_dist',
+            name: 'Poteaux en Bois',
+    				multiplier: 1,
+    				color: 0x1dacdd,
+    				colorLegend: '#1dacdd',
+    				user_multiplier: 0.5,
+    				max: 137,
+    				display: true
+    			}
+        }
+  		}
     };
   },
   components: {
@@ -41,8 +83,11 @@ export default {
     Sidebar
   },
   events: {
-    "loader-off": function () {
+    'loader-off': function () {
       this.displayLoader = false;
+    },
+    'params-update': function (params) {
+      this.$broadcast('update-graph');
     }
   }
 }

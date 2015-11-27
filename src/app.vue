@@ -45,6 +45,7 @@
 
 <template lang="html">
   <div :class="{'app-container':true, 'pointer-cursor': pointerCursor }">
+    <infos v-show="displayInfos" :data="infosData" @close="closeInfos" transition="intro"></infos>
     <span class="toggle-sound" :class="{'no-sound': !sound}" @click="toggleSound"></span>
     <loader v-if="displayLoader" transition="fade"></loader>
     <intro v-if="intro" transition="intro"></intro>
@@ -62,6 +63,7 @@ import Sidebar from './components/Sidebar.vue'
 import AppTitle from './components/AppTitle.vue'
 import Details from './components/Details.vue'
 import Intro from './components/Intro.vue'
+import Infos from './components/Infos.vue'
 import { Howl } from 'howler';
 
 export default {
@@ -71,7 +73,8 @@ export default {
     Sidebar,
     AppTitle,
     Details,
-    Intro
+    Intro,
+    Infos
   },
   data () {
     return {
@@ -79,8 +82,10 @@ export default {
       main: false,
       sound: true,
       title: false,
+      infosData: {},
       pointerCursor: false,
       displayLoader: false,
+      displayInfos: false,
       details: { params: {}, infos: {} },
       showDetails: false,
       paramsData: {
@@ -90,18 +95,26 @@ export default {
           slug: 'hauteur',
   				multiplier: 0.001,
   				color: 0xffffff,
-  				user_multiplier: 1
+  				user_multiplier: 1,
+          infos: {
+            title: 'La Hauteur',
+            description: "La Hauteur est également un facteur majeur de la solitude d’un arbre. S’il se tient plus bas que ses congénères, la frustration générée impacte sur son ressenti. Plus réservé et moins ouvert sur le monde, l’arbre s’enferme alors dans la solitude. Au contraire, s’il est plus haut des autres, l’arbre s’ouvre sur le monde, sa vision est agrandie devient plus social et heureux."
+          }
   			},
   			leafs: {
           arbres_align_dist: {
             slug: 'arbres_align_dist',
-            name: 'Arbres',
+            name: "Arbres d'alignement",
     				multiplier: 1,
             color: 0x16f1d4,
     				colorLegend: '#16f1d4',
     				user_multiplier: 1,
     				max: 104025,
-    				display: true
+    				display: true,
+            infos: {
+              title: "Les Arbres d'alignement",
+              description: "Lorem ipsum dolor sit amet, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat, officia deserunt mollit anim id est laborum."
+            }
     			},
     			bancs_dist: {
             slug: 'bancs_dist',
@@ -111,7 +124,11 @@ export default {
     				max: 11581,
     				multiplier: 1,
     				user_multiplier: 1,
-    				display: true
+    				display: true,
+            infos: {
+              title: "Les Bancs",
+              description: "Les bancs publics redonnent à l’arbre le goût à la vie. Les bancs publiques sont des lieux de rencontre, de méditation, ou simplement de vie. L’arbre ressent alors cette vie près de lui et se sent moins seul."
+            }
     			},
     			poteaux_bois_dist: {
             slug: 'poteaux_bois_dist',
@@ -121,7 +138,11 @@ export default {
     				colorLegend: '#1dacdd',
     				user_multiplier: 0.5,
     				max: 137,
-    				display: true
+    				display: true,
+            infos: {
+              title: "Les Poteaux en bois",
+              description: "L’absence de poteaux en bois est importante pour le bien-être et le moral de l’arbre. En effet, l’arbre est plus enclin à la dépression s’il s’aperçoit qu’un des congénères morts ( un poteau en bois donc) se trouve à proximité. L’arbre peut alors se recroqueviller sur lui-même perdu dans ses pensées et souvenirs négatifs."
+            }
     			}
         }
   		}
@@ -146,6 +167,9 @@ export default {
         this.music.pause();
       }
       this.$broadcast('sound-status', this.sound);
+    },
+    closeInfos() {
+      this.displayInfos = false;
     }
   },
   events: {
@@ -181,6 +205,10 @@ export default {
       setTimeout(() => {
         this.title = true;
       }, 600);
+    },
+    'show-infos': function (infos) {
+      this.infosData = infos;
+      this.displayInfos = true;
     }
   }
 }

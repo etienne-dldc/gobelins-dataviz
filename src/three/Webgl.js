@@ -26,7 +26,7 @@ export default class Webgl {
      * SCENE
      */
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0x000000, 300, 1500 );
+    this.scene.fog = new THREE.Fog( 0x000000, 300, 3000 );
 		this.scene.fog.color.setHSL( 0, 0, 0 );
 
     /**

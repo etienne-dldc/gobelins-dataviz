@@ -151,10 +151,7 @@ import Tools from '../modules/tools';
 export default {
   props: ['data', 'paramsData'],
   ready() {
-    // this.$watch('data', function (oldData, newData) {
-    //   console.log(newData);
-    // })
-    console.log(this.data.params);
+
   },
   computed: {
     // a computed getter

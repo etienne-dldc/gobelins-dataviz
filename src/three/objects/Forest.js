@@ -2,6 +2,7 @@ import THREE from 'three';
 import Tools from '../../modules/tools';
 import Tree from './Tree';
 import _ from 'lodash';
+import 'gsap';
 
 export default class Forest extends THREE.Object3D {
   constructor() {
@@ -72,29 +73,51 @@ export default class Forest extends THREE.Object3D {
 
 	addTree(treeData, params) {
 		// Position
-		var pos = [0, 0];
-		if (params.realGeoloc) {
-			pos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
-		} else {
-			var maxLoop = 50;
-			var x, z;
-			do {
-				let posAngle = Math.random() * Math.PI * 2;
-				let posDist = Math.random() * (this.gridSize * 0.9 );
-				x =  Math.cos(posAngle) * posDist;
-				z = Math.sin(posAngle) * posDist;
-				maxLoop--;
-				if (maxLoop == 0) { console.log('max'); }
-			} while (maxLoop > 0 && this.closestTree(x, z) < 30);
-			pos = [x, z];
-		}
+		let realPos = Tools.geoCoordsToCanvas(treeData.geom_x_y);
+
+		var maxLoop = 50;
+		var x, z;
+		do {
+			let posAngle = Math.random() * Math.PI * 2;
+			let posDist = Math.random() * (this.gridSize * 0.9 );
+			x =  Math.cos(posAngle) * posDist;
+			z = Math.sin(posAngle) * posDist;
+			maxLoop--;
+			if (maxLoop == 0) { console.log('max'); }
+		} while (maxLoop > 0 && this.closestTree(x, z) < 30);
+		let randomPos = [x, z];
 
 		var newTree = new Tree(treeData, params);
-		newTree.position.setX(pos[0]);
-		newTree.position.setZ(pos[1]);
+		newTree.customData = {
+			realPos, randomPos
+		};
+		if (params.realGeoloc) {
+			newTree.position.setX(realPos[0]);
+			newTree.position.setZ(realPos[1]);
+		} else {
+			newTree.position.setX(randomPos[0]);
+			newTree.position.setZ(randomPos[1]);
+		}
 		this.add(newTree);
 		this.trees.push(newTree);
 	}
+
+  updatePos(realPos) {
+		for (var i = 0; i < this.trees.length; i++) {
+			let tree = this.trees[i];
+			let pos = [0, 0];
+			if (!realPos) {
+				pos = tree.customData.realPos;
+			} else {
+				pos = tree.customData.randomPos;
+			}
+
+			TweenMax.to(tree.position, 0.5, {
+				x: pos[0],
+				z: pos[1],
+			})
+		}
+  }
 
 	getHitboxList(){
 		var result = [];

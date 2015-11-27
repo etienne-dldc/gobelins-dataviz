@@ -14,18 +14,17 @@
     color: white;
     bottom: 60px;
     right: 90px;
-    font-family: ‘Cpcompany’, sans-serif;
-      text-transform: uppercase;
-      color: #8c8c8c;
-      font-size: 9px;
-      -webkit-transition: 0.35s;
-      transition: 0.35s;
-      text-decoration: none;
-      font-size: 12px;
-      vertical-align: middle;
-      padding-top: 35px;
-      letter-spacing: 2px;
-      cursor:pointer;
+    font-family: 'cpcompanyregular' sans-serif;
+    text-transform: uppercase;
+    color: #8c8c8c;
+    -webkit-transition: 0.35s;
+    transition: 0.35s;
+    text-decoration: none;
+    font-size: 12px;
+    vertical-align: middle;
+    padding-top: 35px;
+    letter-spacing: 2px;
+    cursor:pointer;
   }
   .skip-intro:hover{
     color:#999999;

@@ -58,7 +58,10 @@ export default {
   },
   events: {
     'update-params': 'updateParams',
-    'update-graph': 'updateGraph'
+    'update-graph': 'updateGraph',
+    'realpos-change': function (realpos) {
+      this.webgl.forest.updatePos(realpos);
+    }
   },
   methods: {
     resizeHandler() {

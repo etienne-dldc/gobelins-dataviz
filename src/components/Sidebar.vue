@@ -1,4 +1,4 @@
-<style lang="sass?outputStyle=expanded" scoped>
+<style lang="sass?outputStyle=expanded">
 
   @import "../styles/variables.scss";
 
@@ -89,6 +89,7 @@
       font-size:13px;
       margin-bottom: 10px;
       padding: 20px;
+      margin-left: 20px;
       text-transform:uppercase;
     }
 
@@ -138,6 +139,62 @@
       bottom:4px;
       left: 170px;
     }
+
+    .checkbox-custom {
+      width: 28px;
+      height: 28px;
+      background: none;
+      margin-top: 17px;
+
+      position: relative;
+
+      input[type=checkbox] {
+        visibility: hidden;
+      }
+
+      label {
+        cursor: pointer;
+        position: absolute;
+        border: 1px solid #3d3d3d;
+        width: 15px;
+        height: 15px;
+        left: 3px;
+        top: 3px;
+        transition:0.35s;
+        webkit-transition:0.35s;
+      }
+
+      label:after {
+        opacity: 0;
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 5px;
+        background: transparent;
+        top: 1px;
+        left: 1px;
+        border: 2px solid #949494;
+        border-top: none;
+        border-right: none;
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        transition:0.15s;
+        webkit-transition:0.15s;
+      }
+
+      label:hover::after {
+        opacity: 0.3;
+      }
+
+      input[type=checkbox]:checked + label:after {
+        opacity: 1;
+      }
+    }
+
+    .real-pos-checkbox{
+      position: absolute;
+    }
   }
 
   .sidebar.is-hide{
@@ -176,9 +233,9 @@
           <hr class="sep"/>
 
           <div class="legend-align">
-            <div v-if="checkbox" class="checkbox-custom">
-              <input type="checkbox" id="checkbox-{{params.slug}}" name="display" v-model="params.display">
-              <label for="checkbox-{{params.slug}}"></label>
+            <div class="checkbox-custom real-pos-checkbox">
+              <input type="checkbox" id="checkbox-real-dist" name="display" v-model="realPos">
+              <label for="checkbox-real-dist"></label>
             </div>
             <h4 class="distancereal">afficher les distances réelles</h4>
           </div>
@@ -203,11 +260,14 @@ export default {
   props: ['params-data'],
   data: () => {
     return {
-      displaySideBar: false
+      displaySideBar: false,
+      realPos: false
     }
   },
   ready() {
-
+    this.$watch('realPos', function (oldData, newData) {
+      this.$root.$broadcast('realpos-change', newData);
+    })
   },
   components: {
     Legend

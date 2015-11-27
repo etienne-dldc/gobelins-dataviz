@@ -21,50 +21,52 @@
       margin-top: 17px;
 
       position: relative;
+
+      input[type=checkbox] {
+        visibility: hidden;
+      }
+
+      label {
+        cursor: pointer;
+        position: absolute;
+        border: 1px solid #3d3d3d;
+        width: 15px;
+        height: 15px;
+        left: 3px;
+        top: 3px;
+        transition:0.35s;
+        webkit-transition:0.35s;
+      }
+
+      label:after {
+        opacity: 0;
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 5px;
+        background: transparent;
+        top: 1px;
+        left: 1px;
+        border: 2px solid #949494;
+        border-top: none;
+        border-right: none;
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        transition:0.15s;
+        webkit-transition:0.15s;
+      }
+
+      label:hover::after {
+        opacity: 0.3;
+      }
+
+      input[type=checkbox]:checked + label:after {
+        opacity: 1;
+      }
     }
 
-    input[type=checkbox] {
-      visibility: hidden;
-    }
 
-    label {
-      cursor: pointer;
-      position: absolute;
-      border: 1px solid #3d3d3d;
-      width: 15px;
-      height: 15px;
-      left: 3px;
-      top: 3px;
-      transition:0.35s;
-      webkit-transition:0.35s;
-    }
-
-    label:after {
-      opacity: 0;
-      content: '';
-      position: absolute;
-      width: 12px;
-      height: 5px;
-      background: transparent;
-      top: 1px;
-      left: 1px;
-      border: 2px solid #949494;
-      border-top: none;
-      border-right: none;
-      -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-      transform: rotate(-45deg);
-      transition:0.15s;
-      webkit-transition:0.15s;
-    }
-
-    label:hover::after {
-      opacity: 0.3;
-    }
-
-    input[type=checkbox]:checked + label:after {
-      opacity: 1;
-    }
 
     h4{
       font-family: 'cpcompanyregular' sans-serif;
@@ -91,7 +93,7 @@
     }
 
     .info{
-      font-family : ‘Cpcompany’, sans-serif;
+      font-family: 'cpcompanyregular' sans-serif;
       text-transform: uppercase;
       color: #8c8c8c;
       font-size: 9px;
@@ -114,7 +116,7 @@
       width: 6px;
       content: url(../styles/images/arrow.svg);
       position: absolute;
-      bottom:26px;
+      top: 35px;
       right: -16px;
     }
 
@@ -160,7 +162,7 @@
         <h4>{{ params.name }}</h4>
         <slider :slug="params.slug" :value="params.user_multiplier * 100" @slider-change="onSliderChange"></slider>
       </div>
-      <a class="info" href="#">info</a>
+      <a class="info" href="#" @click="onInfosClick">info</a>
     </div>
   </div>
 </template>
@@ -193,6 +195,9 @@ export default {
     onSliderChange(name, value) {
       this.params.user_multiplier = value / 100;
       this.$dispatch('params-update');
+    },
+    onInfosClick(){
+      this.$dispatch('show-infos', this.params.infos);
     }
   }
 }

@@ -8,10 +8,11 @@ window.THREE = THREE;
 const OrbitControls = OrbitControlsInit(THREE);
 
 export default class Webgl {
-  constructor(width, height) {
+  constructor(width, height, vueRoot) {
     this.params = {
       usePostprocessing: false,
     };
+    this.vueRoot = vueRoot;
     this.allData = [];
     this.paramsData = null;
     this.mouse = new THREE.Vector2();
@@ -113,6 +114,7 @@ export default class Webgl {
     if (intersects.length == 0) {
       if (this.hoverTree !== null) {
         this.hoverTree.hoverOff();
+        this.vueRoot.$broadcast('tree-unhover');
         this.hoverTree = null;
       }
       return;
@@ -125,6 +127,7 @@ export default class Webgl {
       }
       this.hoverTree = tree;
       tree.hoverOn();
+      this.vueRoot.$broadcast('tree-hover', this.hoverTree.data);
     }
   }
 

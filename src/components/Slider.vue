@@ -18,26 +18,39 @@
     .noUi-handle {
       border: none;
       border-radius: 0px;
-      width: 10px;
+      width: 2px;
       background: white;
-      height: 28px;
-      left: -5px;
-      top: -12px;
+      height: 20px;
+      left: -1px;
+      top: -8px;
+      position: relative;
     }
-    .noUi-handle:before, .noUi-handle:after{
+    .noUi-handle:after{
+      content: '';
+      display: inline-block;
+      position: absolute;
+      left: -10px;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .noUi-handle:before{
       content: none;
     }
 
     .noUi-base {
-      height: 24px;
-      top: -10px;
+      height: 20px;
+      top: -8px;
     }
 
     .noUi-origin {
       background: #2c2c2c;
       border-radius: 0px;
       height: 4px;
-      top: 10px;
+      top: 8px;
     }
 
   }

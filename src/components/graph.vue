@@ -36,7 +36,7 @@ export default {
 
     var winHeight = $(window).height();
     $(this.$el).height(winHeight);
-    this.webgl = new Webgl(this.$el.clientWidth, this.$el.clientHeight);
+    this.webgl = new Webgl(this.$el.clientWidth, this.$el.clientHeight, this.$root);
     // GUI settings
     // this.gui = new dat.GUI();
     // this.gui.add(this.webgl.params, 'usePostprocessing');

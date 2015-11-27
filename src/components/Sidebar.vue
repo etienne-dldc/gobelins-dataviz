@@ -16,7 +16,7 @@
     h3{
       color : #808080;
   		text-transform: uppercase;
-  		font-family : 'cpcompanyregular', sans-serif;
+  		font-family : 'cpcompanyregular' sans-serif;
       font-size: 16px;
       padding-top: 30px;
       padding-bottom: 12px;
@@ -73,7 +73,7 @@ export default {
     return {}
   },
   ready() {
-    
+
   },
   components: {
     Legend

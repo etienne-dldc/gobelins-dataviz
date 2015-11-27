@@ -1,11 +1,3 @@
-<template lang="html">
-  <div class="app-container">
-    <loader v-if="displayLoader" transition="fade"></loader>
-    <graph :params-data="paramsData"></graph>
-    <sidebar :params-data="paramsData"></sidebar>
-  </div>
-</template>
-
 <style lang="sass">
   html, body{
     height: 100%;
@@ -24,15 +16,43 @@
   }
 </style>
 
+<template lang="html">
+  <div class="app-container">
+    <loader v-if="displayLoader" transition="fade"></loader>
+    <template v-if="intro">
+      <intro></intro>
+    </template>
+    <template v-else>
+      <graph :params-data="paramsData"></graph>
+      <sidebar :params-data="paramsData"></sidebar>
+      <app-title></app-title>
+      <details v-if="details" :data="details" transition="details"></details>
+    </template>
+  </div>
+</template>
+
 <script>
 import Graph from './components/Graph.vue'
 import Loader from './components/Loader.vue'
 import Sidebar from './components/Sidebar.vue'
+import AppTitle from './components/AppTitle.vue'
+import Details from './components/Details.vue'
+import Intro from './components/Intro.vue'
 
 export default {
+  components: {
+    Graph,
+    Loader,
+    Sidebar,
+    AppTitle,
+    Details,
+    Intro
+  },
   data () {
     return {
+      intro: true,
       displayLoader: true,
+      details: false,
       paramsData: {
         realGeoloc: false,
   			hauteur: {
@@ -77,10 +97,8 @@ export default {
   		}
     };
   },
-  components: {
-    Graph,
-    Loader,
-    Sidebar
+  ready() {
+
   },
   events: {
     'loader-off': function () {
@@ -88,6 +106,15 @@ export default {
     },
     'params-update': function (params) {
       this.$broadcast('update-graph');
+    },
+    'tree-hover': function (tree) {
+      clearTimeout(this.hideDetailTimer);
+      this.details = tree;
+    },
+    'tree-unhover': function () {
+      this.hideDetailTimer = setTimeout( () => {
+        this.details = false;
+      }, 1000);
     }
   }
 }

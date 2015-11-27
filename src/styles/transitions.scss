@@ -1,6 +1,7 @@
 /* always present */
 .fade-transition {
-  transition: all .3s ease;
+  -webkit-transition: all .3s ease;
+          transition: all .3s ease;
 }
 
 /* .expand-enter defines the starting state for entering */
@@ -11,4 +12,27 @@
 /* .expand-leave defines the ending state for leaving */
 .fade-leave {
   opacity: 0;
+}
+
+
+/* always present */
+.details-transition {
+  -webkit-transition: all .3s ease;
+          transition: all .3s ease;
+}
+
+/* .expand-enter defines the starting state for entering */
+.details-enter{
+  opacity: 1;
+  -webkit-transform: translateX(-75%);
+      -ms-transform: translateX(-75%);
+          transform: translateX(-75%);
+}
+
+/* .expand-leave defines the ending state for leaving */
+.details-leave {
+  opacity: 0;
+  -webkit-transform: translateX(-75%);
+      -ms-transform: translateX(-75%);
+          transform: translateX(-75%);
 }

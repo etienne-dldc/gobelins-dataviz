@@ -30,7 +30,7 @@ var webpackConfig = {
       },
       {
         // edit this for additional asset file types
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpg|gif|svg)$/,
         loader: 'file?name=[name].[ext]?[hash]'
       },
       {

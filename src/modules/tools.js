@@ -24,6 +24,9 @@ var Tools = {
   geoDistToCanvas(dist) {
     return Tools.map(dist, 0, 0.1, 0, size);
   },
+  geoDistToKilometre(dist) {
+    return dist / 0.01369;
+  },
   sphereRayonFromVolume(volume) {
     return Math.pow( (3*volume) / (4 * Math.PI), 1/3);
   },

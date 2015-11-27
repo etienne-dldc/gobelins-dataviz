@@ -36,3 +36,49 @@
       -ms-transform: translateX(-75%);
           transform: translateX(-75%);
 }
+
+
+/* always present */
+.intro-transition {
+  -webkit-transition: all .5s ease;
+          transition: all .5s ease;
+}
+
+/* .expand-enter defines the starting state for entering */
+.intro-enter{
+  opacity: 1;
+  -webkit-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+          transform: translateY(-100%);
+}
+
+/* .expand-leave defines the ending state for leaving */
+.intro-leave {
+  opacity: 0.5;
+  -webkit-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+          transform: translateY(-100%);
+}
+
+
+/* always present */
+.title-transition {
+  -webkit-transition: all .5s ease;
+          transition: all .5s ease;
+}
+
+/* .expand-enter defines the starting state for entering */
+.title-enter{
+  opacity: 1;
+  -webkit-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+          transform: translateY(-100%);
+}
+
+/* .expand-leave defines the ending state for leaving */
+.title-leave {
+  opacity: 0.5;
+  -webkit-transform: translateY(-100%);
+      -ms-transform: translateY(-100%);
+          transform: translateY(-100%);
+}

@@ -14,20 +14,44 @@
     right: 0;
     bottom: 0;
   }
+
+  .group{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .toggle-sound{
+    position: fixed;
+    top: 35px;
+    right: 27px;
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    z-index: 3000;
+    background: url('styles/images/sound.svg') no-repeat;
+  }
+
+  .toggle-sound.no-sound{
+    background: url('styles/images/nosound.svg') no-repeat;
+  }
+
+  .pointer-cursor canvas{
+    cursor: pointer;
+  }
 </style>
 
 <template lang="html">
-  <div class="app-container">
+  <div :class="{'app-container':true, 'pointer-cursor': pointerCursor }">
+    <span class="toggle-sound" :class="{'no-sound': !sound}" @click="toggleSound"></span>
     <loader v-if="displayLoader" transition="fade"></loader>
-    <template v-if="intro">
-      <intro></intro>
-    </template>
-    <template v-else>
-      <graph :params-data="paramsData"></graph>
-      <sidebar :params-data="paramsData"></sidebar>
-      <app-title></app-title>
-      <details v-if="details" :data="details" transition="details"></details>
-    </template>
+    <intro v-if="intro" transition="intro"></intro>
+    <graph v-if="main" :params-data="paramsData"></graph>
+    <sidebar v-if="main" :params-data="paramsData"></sidebar>
+    <app-title v-if="title" transition="title"></app-title>
+    <details v-show="main && showDetails" :data="details" :params-data="paramsData" transition="details"></details>
   </div>
 </template>
 
@@ -38,6 +62,7 @@ import Sidebar from './components/Sidebar.vue'
 import AppTitle from './components/AppTitle.vue'
 import Details from './components/Details.vue'
 import Intro from './components/Intro.vue'
+import { Howl } from 'howler';
 
 export default {
   components: {
@@ -51,8 +76,13 @@ export default {
   data () {
     return {
       intro: true,
-      displayLoader: true,
-      details: false,
+      main: false,
+      sound: true,
+      title: false,
+      pointerCursor: false,
+      displayLoader: false,
+      details: { params: {}, infos: {} },
+      showDetails: false,
       paramsData: {
         realGeoloc: false,
   			hauteur: {
@@ -99,6 +129,24 @@ export default {
   },
   ready() {
 
+    this.music = new Howl({
+      urls: ['music/ambient.mp3'],
+      autoplay: true,
+      loop: true,
+      volume: 0.5
+    });
+
+  },
+  methods: {
+    toggleSound() {
+      this.sound = !this.sound;
+      if (this.sound) {
+        this.music.play();
+      } else {
+        this.music.pause();
+      }
+      this.$broadcast('sound-status', this.sound);
+    }
   },
   events: {
     'loader-off': function () {
@@ -107,14 +155,32 @@ export default {
     'params-update': function (params) {
       this.$broadcast('update-graph');
     },
-    'tree-hover': function (tree) {
+    'tree-hover': function (infos, params) {
+      this.pointerCursor = true;
       clearTimeout(this.hideDetailTimer);
-      this.details = tree;
+      this.details = {
+        infos,
+        params
+      };
+      this.showDetails = true;
     },
     'tree-unhover': function () {
+      this.pointerCursor = false;
       this.hideDetailTimer = setTimeout( () => {
-        this.details = false;
+        this.showDetails = false;
       }, 1000);
+    },
+    'intro-end': function () {
+      this.main = true;
+      setTimeout(() => {
+        this.intro = false;
+      }, 300);
+      setTimeout(() => {
+        this.$broadcast('show-sidebar');
+      }, 600);
+      setTimeout(() => {
+        this.title = true;
+      }, 600);
     }
   }
 }

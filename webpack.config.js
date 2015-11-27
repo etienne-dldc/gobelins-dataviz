@@ -30,11 +30,7 @@ var webpackConfig = {
       },
       {
         // edit this for additional asset file types
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'file?name=[name].[ext]?[hash]'
-      },
-      {
-        test: /\.(svg|eot|woff2|woff|ttf)$/,
+        test: /\.(png|jpg|gif|svg|eot|woff2|woff|ttf)$/,
         loader: 'file?name=[name].[ext]?[hash]'
       }
     ]

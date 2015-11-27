@@ -127,7 +127,7 @@ export default class Webgl {
       }
       this.hoverTree = tree;
       tree.hoverOn();
-      this.vueRoot.$broadcast('tree-hover', this.hoverTree.data);
+      this.vueRoot.$broadcast('tree-hover', this.hoverTree.data, this.hoverTree.params);
     }
   }
 

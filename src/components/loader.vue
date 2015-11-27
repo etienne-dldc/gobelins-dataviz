@@ -8,7 +8,7 @@
     background: rgba(0, 0, 0, 1);
     color: white;
     font-size: 20px;
-    z-index: 1000;
+    z-index: 1050;
     text-align: center;
   }
 

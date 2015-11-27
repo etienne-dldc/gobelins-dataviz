@@ -58,7 +58,7 @@ export default class Forest extends THREE.Object3D {
 	generateTrees() {
 		if (this.allData.length == 0) { console.log('No data :/'); return false; }
 		for (var i = 0; i < this.allData.length; i++) {
-			this.addTree(this.allData[i], this.paramsData);
+  		this.addTree(this.allData[i], this.paramsData);
 		}
 	}
 

@@ -35,20 +35,20 @@
 
       .nom-commun{
         color : #999999;
-    		text-transform: uppercase;
-    		font-family : 'cpcompanyregular' sans-serif;
-    		font-size : 22px;
-    		margin-bottom: 5px;
+        text-transform: uppercase;
+        font-family : 'cpcompanyregular' sans-serif;
+        font-size : 18px;
+        margin-bottom: 5px;
         margin-top: 15px;
-    		font-style: italic;
+        font-style: italic;
       }
 
       .espece{
         color : #999999;
-    		text-transform: uppercase;
-    		font-family : Garamond serif;
-        font-size: 16px;
-        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-family : Garamond serif;
+        font-size: 14px;
+        letter-spacing: 6px;
         margin-bottom: 20px;
         margin-top: 0;
         margin-left: 4px;
@@ -81,6 +81,44 @@
         display: inline-block;
         background: url(../styles/images/location.svg) no-repeat;
       }
+
+      .rayon{
+        color : #999999;
+        text-transform: uppercase;
+        font-family : 'cpcompanyregular' sans-serif;
+        font-size : 16px;
+        margin-bottom: 8px;
+      }
+
+      .leafs-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 0;
+
+        li{
+          line-height: 2.2;
+          font-size: 13px;
+          text-transform: uppercase;
+
+          b{
+            display: inline-block;
+            width: 35px;
+          }
+        }
+      }
+
+      .leafs-point{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 30px;
+        vertical-align: middle;
+        margin: 6px 20px;
+      }
+    }
+
+    b{
+      color: #CACACA;
     }
   }
 </style>
@@ -90,27 +128,39 @@
     <div class="details-content">
       <p class="title">Infomations</p>
       <hr>
-      <p class="nom-commun">{{data.nom_commun}}</p>
-      <p class="espece">{{data.espece}}</p>
-      <p class="annee_pla">Année de plantation : {{data.annee_pla}}</p>
-      <p class="hauteur">Hauteur de l'arbre : {{data.hauteur}} m</p>
-      <p class="nom_ev"><span class="nom-ev-icon"></span> {{data.nom_ev}}</p>
+      <p class="nom-commun">{{data.infos.nom_commun}}</p>
+      <p class="espece">{{data.infos.espece}}</p>
+      <p class="annee_pla">Année de plantation : <b>{{data.infos.annee_pla}}</b></p>
+      <p class="hauteur">Hauteur de l'arbre : <b>{{data.infos.hauteur}} m</b></p>
+      <p class="nom_ev"><span class="nom-ev-icon"></span> {{data.infos.nom_ev}}</p>
       <hr>
-
-
+      <p class="rayon"><b>{{rayonMetters}} m</b> de champ de vision</p>
+      <ul class="leafs-list">
+        <li v-for="(key, leaf) in data.params.leafs">
+          <span class="leafs-point" :style="{background: paramsData.leafs[key].colorLegend }"></span><b>{{leaf.particles}}</b> {{paramsData.leafs[key].name}}
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import $ from 'jquery';
+import Tools from '../modules/tools';
 
 export default {
-  props: ['data'],
+  props: ['data', 'paramsData'],
   ready() {
     // this.$watch('data', function (oldData, newData) {
     //   console.log(newData);
     // })
+    console.log(this.data.params);
+  },
+  computed: {
+    // a computed getter
+    rayonMetters: function () {
+      return Math.floor(Tools.geoDistToKilometre(this.data.params.rayon) * 1000);
+    }
   },
   methods: {
 

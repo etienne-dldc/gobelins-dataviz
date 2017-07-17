@@ -123,6 +123,7 @@ export default {
     }, function () {
       // Player (this) is initialized and ready.
       that.player = this;
+      that.player.play();
       that.$dispatch('loader-off');
       that.player.on('ended', function() {
         that.$dispatch('intro-end');

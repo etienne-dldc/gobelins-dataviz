@@ -50,6 +50,30 @@
     animation-iteration-count: 1;
   }
 
+  .play-intro{
+    position: absolute;
+    z-index: 1110;
+    color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'cpcompanyregular' sans-serif;
+    text-transform: uppercase;
+    color: #8c8c8c;
+    -webkit-transition: 0.35s;
+    transition: 0.35s;
+    text-decoration: none;
+    font-size: 12px;
+    vertical-align: middle;
+    padding-top: 35px;
+    letter-spacing: 2px;
+    cursor:pointer;
+  }
+  .play-intro:hover{
+    color:#999999;
+    letter-spacing: 2.2px;
+  }
+
 
   @keyframes wobbleright {
     16.65% {
@@ -78,6 +102,7 @@
       </video>
     </div>
     <p @click="skipIntro" class="skip-intro">Passer l'intro</p>
+    <p v-if="!playing" @click="playIntro" class="play-intro">Play Intro</p>
   </div>
 </template>
 
@@ -86,6 +111,11 @@ import $ from 'jquery';
 import videojs from 'video.js';
 
 export default {
+  data() {
+    return {
+      playing: false,
+    };
+  },
   ready() {
     let videoRatio = 16 / 9;
     let screenWidth = $(this.$el).width();
@@ -96,39 +126,45 @@ export default {
       // Fit height
       vidHeight = screenHeight;
       vidTop = 0;
-      vidWidth = vidHeight * (videoRatio);
-      vidLeft = (screenWidth - vidWidth)/2;
+      vidWidth = vidHeight * videoRatio;
+      vidLeft = (screenWidth - vidWidth) / 2;
     } else {
       // Fit width
       vidWidth = screenWidth;
       vidLeft = 0;
-      vidHeight = vidWidth * (1/videoRatio);
-      vidTop = (screenHeight - vidHeight)/2;
+      vidHeight = vidWidth * (1 / videoRatio);
+      vidTop = (screenHeight - vidHeight) / 2;
     }
-    $(this.$el).find('.intro-video').css({
-      width: vidWidth,
-      height: vidHeight,
-      marginLeft: vidLeft,
-      marginTop: vidTop
-    });
+    $(this.$el)
+      .find('.intro-video')
+      .css({
+        width: vidWidth,
+        height: vidHeight,
+        marginLeft: vidLeft,
+        marginTop: vidTop,
+      });
 
     var that = this;
 
-    videojs("video-intro", {
-      "autoplay": true,
-      "preload": "auto",
-      "width": vidWidth,
-      "height": vidHeight
-      //"poster": "http://video-js.zencoder.com/oceans-clip.png"
-    }, function () {
-      // Player (this) is initialized and ready.
-      that.player = this;
-      that.player.play();
-      that.$dispatch('loader-off');
-      that.player.on('ended', function() {
-        that.$dispatch('intro-end');
-      });
-    });
+    videojs(
+      'video-intro',
+      {
+        autoplay: false,
+        preload: 'auto',
+        width: vidWidth,
+        height: vidHeight,
+        //"poster": "http://video-js.zencoder.com/oceans-clip.png"
+      },
+      function() {
+        // Player (this) is initialized and ready.
+        that.player = this;
+        // that.player.play();
+        that.$dispatch('loader-off');
+        that.player.on('ended', function() {
+          that.$dispatch('intro-end');
+        });
+      }
+    );
   },
   methods: {
     skipIntro() {
@@ -136,17 +172,22 @@ export default {
         this.player.pause();
       }, 300);
       this.$dispatch('intro-end');
-    }
+    },
+    playIntro() {
+      this.player.play();
+      this.playing = true;
+      this.$dispatch('intro-start');
+    },
   },
   events: {
-    'sound-status': function (sound) {
+    'sound-status': function(sound) {
       console.log(this.player);
       if (sound) {
         this.player.volume(0);
       } else {
         this.player.volume(1);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -57,13 +57,13 @@
 </template>
 
 <script>
-import Graph from './components/Graph.vue'
-import Loader from './components/Loader.vue'
-import Sidebar from './components/Sidebar.vue'
-import AppTitle from './components/AppTitle.vue'
-import Details from './components/Details.vue'
-import Intro from './components/Intro.vue'
-import Infos from './components/Infos.vue'
+import Graph from './components/Graph.vue';
+import Loader from './components/Loader.vue';
+import Sidebar from './components/Sidebar.vue';
+import AppTitle from './components/AppTitle.vue';
+import Details from './components/Details.vue';
+import Intro from './components/Intro.vue';
+import Infos from './components/Infos.vue';
 import { Howl } from 'howler';
 
 export default {
@@ -74,13 +74,13 @@ export default {
     AppTitle,
     Details,
     Intro,
-    Infos
+    Infos,
   },
-  data () {
+  data() {
     return {
       intro: true,
       main: false,
-      sound: true,
+      sound: false,
       title: false,
       infosData: {},
       pointerCursor: false,
@@ -90,73 +90,75 @@ export default {
       showDetails: false,
       paramsData: {
         realGeoloc: false,
-  			hauteur: {
-          name: 'Rayon d\'action',
+        hauteur: {
+          name: "Rayon d'action",
           slug: 'hauteur',
-  				multiplier: 0.001,
-  				color: 0xffffff,
-  				user_multiplier: 1,
+          multiplier: 0.001,
+          color: 0xffffff,
+          user_multiplier: 1,
           infos: {
             title: 'La Hauteur',
-            description: "La Hauteur est également un facteur majeur de la solitude d’un arbre. S’il se tient plus bas que ses congénères, la frustration générée impacte sur son ressenti. Plus réservé et moins ouvert sur le monde, l’arbre s’enferme alors dans la solitude. Au contraire, s’il est plus haut des autres, l’arbre s’ouvre sur le monde, sa vision est agrandie devient plus social et heureux."
-          }
-  			},
-  			leafs: {
+            description:
+              'La Hauteur est également un facteur majeur de la solitude d’un arbre. S’il se tient plus bas que ses congénères, la frustration générée impacte sur son ressenti. Plus réservé et moins ouvert sur le monde, l’arbre s’enferme alors dans la solitude. Au contraire, s’il est plus haut des autres, l’arbre s’ouvre sur le monde, sa vision est agrandie devient plus social et heureux.',
+          },
+        },
+        leafs: {
           arbres_align_dist: {
             slug: 'arbres_align_dist',
             name: "Arbres d'alignement",
-    				multiplier: 1,
+            multiplier: 1,
             color: 0x16f1d4,
-    				colorLegend: '#16f1d4',
-    				user_multiplier: 1,
-    				max: 104025,
-    				display: true,
+            colorLegend: '#16f1d4',
+            user_multiplier: 1,
+            max: 104025,
+            display: true,
             infos: {
               title: "Les Arbres d'alignement",
-              description: "Lorem ipsum dolor sit amet, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat, officia deserunt mollit anim id est laborum."
-            }
-    			},
-    			bancs_dist: {
+              description:
+                'Lorem ipsum dolor sit amet, tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat, officia deserunt mollit anim id est laborum.',
+            },
+          },
+          bancs_dist: {
             slug: 'bancs_dist',
             name: 'Bancs',
-    				color: 0x18f277,
-    				colorLegend: '#18f277',
-    				max: 11581,
-    				multiplier: 1,
-    				user_multiplier: 1,
-    				display: true,
+            color: 0x18f277,
+            colorLegend: '#18f277',
+            max: 11581,
+            multiplier: 1,
+            user_multiplier: 1,
+            display: true,
             infos: {
-              title: "Les Bancs",
-              description: "Les bancs publics redonnent à l’arbre le goût à la vie. Les bancs publiques sont des lieux de rencontre, de méditation, ou simplement de vie. L’arbre ressent alors cette vie près de lui et se sent moins seul."
-            }
-    			},
-    			poteaux_bois_dist: {
+              title: 'Les Bancs',
+              description:
+                'Les bancs publics redonnent à l’arbre le goût à la vie. Les bancs publiques sont des lieux de rencontre, de méditation, ou simplement de vie. L’arbre ressent alors cette vie près de lui et se sent moins seul.',
+            },
+          },
+          poteaux_bois_dist: {
             slug: 'poteaux_bois_dist',
             name: 'Poteaux en Bois',
-    				multiplier: 1,
-    				color: 0x1dacdd,
-    				colorLegend: '#1dacdd',
-    				user_multiplier: 0.5,
-    				max: 137,
-    				display: true,
+            multiplier: 1,
+            color: 0x1dacdd,
+            colorLegend: '#1dacdd',
+            user_multiplier: 0.5,
+            max: 137,
+            display: true,
             infos: {
-              title: "Les Poteaux en bois",
-              description: "L’absence de poteaux en bois est importante pour le bien-être et le moral de l’arbre. En effet, l’arbre est plus enclin à la dépression s’il s’aperçoit qu’un des congénères morts ( un poteau en bois donc) se trouve à proximité. L’arbre peut alors se recroqueviller sur lui-même perdu dans ses pensées et souvenirs négatifs."
-            }
-    			}
-        }
-  		}
+              title: 'Les Poteaux en bois',
+              description:
+                'L’absence de poteaux en bois est importante pour le bien-être et le moral de l’arbre. En effet, l’arbre est plus enclin à la dépression s’il s’aperçoit qu’un des congénères morts ( un poteau en bois donc) se trouve à proximité. L’arbre peut alors se recroqueviller sur lui-même perdu dans ses pensées et souvenirs négatifs.',
+            },
+          },
+        },
+      },
     };
   },
   ready() {
-
     this.music = new Howl({
       urls: ['music/ambient.mp3'],
-      autoplay: true,
+      autoplay: false,
       loop: true,
-      volume: 0.5
+      volume: 0.5,
     });
-
   },
   methods: {
     toggleSound() {
@@ -168,33 +170,41 @@ export default {
       }
       this.$broadcast('sound-status', this.sound);
     },
+    playSound() {
+      this.sound = true;
+      this.music.play();
+      this.$broadcast('sound-status', this.sound);
+    },
     closeInfos() {
       this.displayInfos = false;
-    }
+    },
   },
   events: {
-    'loader-off': function () {
+    'loader-off': function() {
       this.displayLoader = false;
     },
-    'params-update': function (params) {
+    'params-update': function(params) {
       this.$broadcast('update-graph');
     },
-    'tree-hover': function (infos, params) {
+    'tree-hover': function(infos, params) {
       this.pointerCursor = true;
       clearTimeout(this.hideDetailTimer);
       this.details = {
         infos,
-        params
+        params,
       };
       this.showDetails = true;
     },
-    'tree-unhover': function () {
+    'tree-unhover': function() {
       this.pointerCursor = false;
-      this.hideDetailTimer = setTimeout( () => {
+      this.hideDetailTimer = setTimeout(() => {
         this.showDetails = false;
       }, 1000);
     },
-    'intro-end': function () {
+    'intro-start': function() {
+      this.playSound();
+    },
+    'intro-end': function() {
       this.main = true;
       setTimeout(() => {
         this.intro = false;
@@ -205,11 +215,12 @@ export default {
       setTimeout(() => {
         this.title = true;
       }, 600);
+      this.playSound();
     },
-    'show-infos': function (infos) {
+    'show-infos': function(infos) {
       this.infosData = infos;
       this.displayInfos = true;
-    }
-  }
-}
+    },
+  },
+};
 </script>

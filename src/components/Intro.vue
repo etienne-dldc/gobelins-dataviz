@@ -102,7 +102,7 @@
       </video>
     </div>
     <p @click="skipIntro" class="skip-intro">Passer l'intro</p>
-    <p v-if="!playing" @click="playIntro" class="play-intro">Play Intro</p>
+    <p v-if="!playing" @click="playIntro" class="play-intro">Lancer l'intro</p>
   </div>
 </template>
 

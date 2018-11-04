@@ -172,6 +172,7 @@ export default {
     },
     playSound() {
       this.sound = true;
+      this.music.pause();
       this.music.play();
       this.$broadcast('sound-status', this.sound);
     },
